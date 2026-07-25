@@ -359,11 +359,12 @@ export default function ConsoleApp() {
               onStartCertScan={handleStartCertScan}
               onViewDetails={handleViewDetails}
               setActiveTab={setActiveTab}
+              theme={theme}
             />
           )}
 
           {activeTab === 'proxy' && (
-            <ProxyView handshakes={handshakes} setActiveTab={setActiveTab} />
+            <ProxyView handshakes={handshakes} setActiveTab={setActiveTab} theme={theme} />
           )}
 
           {(activeTab === 'ca' || activeTab === 'certs') && (
@@ -372,6 +373,7 @@ export default function ConsoleApp() {
               issuedCerts={issuedCerts}
               onIssueCert={handleIssueCert}
               setActiveTab={setActiveTab}
+              theme={theme}
             />
           )}
 
@@ -381,10 +383,11 @@ export default function ConsoleApp() {
               onSignArtifact={handleSignArtifact}
               onVerifySignature={handleVerifySignature}
               setActiveTab={setActiveTab}
+              theme={theme}
             />
           )}
 
-          {activeTab === 'standards' && <StandardsView />}
+          {activeTab === 'standards' && <StandardsView theme={theme} />}
         </main>
       </div>
     </div>

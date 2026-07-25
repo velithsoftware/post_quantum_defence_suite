@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ScanJob, Finding, CBOMComponent, TabType } from '../types';
+import { ScanJob, Finding, CBOMComponent, TabType, ThemeMode } from '../types';
 
 interface ScanViewProps {
   scans: ScanJob[];
@@ -13,6 +13,7 @@ interface ScanViewProps {
   onStartCertScan: (host: string, port: string) => Promise<void>;
   onViewDetails: (scanId: string) => void;
   setActiveTab: (tab: TabType) => void;
+  theme?: ThemeMode;
 }
 
 export const ScanView: React.FC<ScanViewProps> = ({
@@ -25,7 +26,9 @@ export const ScanView: React.FC<ScanViewProps> = ({
   onStartCertScan,
   onViewDetails,
   setActiveTab,
+  theme = 'dark',
 }) => {
+  const isDark = theme === 'dark';
   const [scanPath, setScanPath] = useState('');
   const [scanHost, setScanHost] = useState('');
   const [scanPort, setScanPort] = useState('443');
@@ -108,13 +111,13 @@ export const ScanView: React.FC<ScanViewProps> = ({
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Top Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-[#0b1220] via-[#0f172a] to-[#0b1220] p-6 rounded-2xl border border-cyan-500/20">
+      <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl border transition-colors ${isDark ? 'bg-gradient-to-r from-[#0b1220] via-[#0f172a] to-[#0b1220] border-cyan-500/20' : 'bg-white border-slate-200 shadow-sm'}`}>
         <div>
-          <div className="inline-flex items-center space-x-2 text-xs font-mono text-cyan-400 mb-1">
+          <div className="inline-flex items-center space-x-2 text-xs font-mono text-cyan-600 dark:text-cyan-400 mb-1">
             <span>PILLAR 1: DISCOVER</span>
           </div>
-          <h2 className="text-2xl font-bold text-white">Shield Scan & CBOM Discovery</h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Shield Scan & CBOM Discovery</h2>
+          <p className={`text-xs mt-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
             Extract Cryptography Bill of Materials (CBOM) across software repositories and network endpoints.
           </p>
         </div>
@@ -130,7 +133,7 @@ export const ScanView: React.FC<ScanViewProps> = ({
       </div>
 
       {submitError && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-mono">
+        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono">
           🚨 {submitError}
         </div>
       )}
@@ -138,45 +141,45 @@ export const ScanView: React.FC<ScanViewProps> = ({
       {/* Forms Grid: Code Scan & Endpoint Scan */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Code Scan Form */}
-        <form onSubmit={handleScanSubmit} className="bg-[#0b1220] border border-slate-800 p-6 rounded-2xl space-y-4">
+        <form onSubmit={handleScanSubmit} className={`border p-6 rounded-2xl space-y-4 ${isDark ? 'bg-[#0b1220] border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-white flex items-center space-x-2">
+            <h3 className={`text-base font-bold flex items-center space-x-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
               <span>💻 Codebase & Repository Scanner</span>
             </h3>
-            <span className="text-[10px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded font-mono">
+            <span className="text-[10px] bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded font-mono">
               Static AST & CBOM
             </span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
             Specify local directory path or repository path to extract cryptographic primitives.
           </p>
 
           <div className="space-y-2">
-            <label className="text-xs font-mono text-slate-300 block">Directory / Repo Path</label>
+            <label className={`text-xs font-mono block ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Directory / Repo Path</label>
             <input
               type="text"
               required
               value={scanPath}
               onChange={(e) => setScanPath(e.target.value)}
               placeholder="/Users/x/Personal/vscode/quantum_pqc"
-              className="w-full bg-[#070c18] border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white font-mono outline-none transition"
+              className={`w-full border rounded-xl px-4 py-2.5 text-xs font-mono outline-none transition ${isDark ? 'bg-[#070c18] border-slate-700 text-white focus:border-cyan-400' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-cyan-500'}`}
             />
           </div>
 
           {/* Preset Helper */}
           <div className="flex items-center space-x-2 text-[11px]">
-            <span className="text-slate-500 font-mono">Presets:</span>
+            <span className={`font-mono ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Presets:</span>
             <button
               type="button"
               onClick={() => setScanPath('/Users/x/Personal/vscode/quantum_pqc')}
-              className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded font-mono text-[10px]"
+              className={`px-2 py-1 rounded font-mono text-[10px] ${isDark ? 'bg-slate-800 text-cyan-300' : 'bg-slate-100 text-cyan-800'}`}
             >
               Current Repo
             </button>
             <button
               type="button"
               onClick={() => setScanPath('./apps/api')}
-              className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded font-mono text-[10px]"
+              className={`px-2 py-1 rounded font-mono text-[10px] ${isDark ? 'bg-slate-800 text-cyan-300' : 'bg-slate-100 text-cyan-800'}`}
             >
               /apps/api
             </button>
@@ -185,61 +188,60 @@ export const ScanView: React.FC<ScanViewProps> = ({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2"
+            className="w-full py-2.5 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-600 dark:text-cyan-300 border border-cyan-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2"
           >
             {isSubmitting ? 'Auditing Codebase...' : 'Execute CBOM Discovery Scan →'}
           </button>
         </form>
 
         {/* TLS Endpoint Inspector Form */}
-        <form onSubmit={handleEndpointScanSubmit} className="bg-[#0b1220] border border-slate-800 p-6 rounded-2xl space-y-4">
+        <form onSubmit={handleEndpointScanSubmit} className={`border p-6 rounded-2xl space-y-4 ${isDark ? 'bg-[#0b1220] border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-white flex items-center space-x-2">
+            <h3 className={`text-base font-bold flex items-center space-x-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
               <span>🌐 Active TLS Endpoint Auditor</span>
             </h3>
-            <span className="text-[10px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded font-mono">
+            <span className="text-[10px] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded font-mono">
               Live Network Handshake
             </span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
             Probe active network endpoints to evaluate TLS certificate compliance & key exchanges.
           </p>
 
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-2 space-y-2">
-              <label className="text-xs font-mono text-slate-300 block">Host / Domain</label>
+              <label className={`text-xs font-mono block ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Host / Domain</label>
               <input
                 type="text"
                 required
                 value={scanHost}
                 onChange={(e) => setScanHost(e.target.value)}
                 placeholder="api.quantumshield.internal"
-                className="w-full bg-[#070c18] border border-slate-700 focus:border-indigo-400 rounded-xl px-4 py-2.5 text-xs text-white font-mono outline-none transition"
+                className={`w-full border rounded-xl px-4 py-2.5 text-xs font-mono outline-none transition ${isDark ? 'bg-[#070c18] border-slate-700 text-white focus:border-indigo-400' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500'}`}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-mono text-slate-300 block">Port</label>
+              <label className={`text-xs font-mono block ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Port</label>
               <input
                 type="text"
                 required
                 value={scanPort}
                 onChange={(e) => setScanPort(e.target.value)}
                 placeholder="443"
-                className="w-full bg-[#070c18] border border-slate-700 focus:border-indigo-400 rounded-xl px-4 py-2.5 text-xs text-white font-mono outline-none transition"
+                className={`w-full border rounded-xl px-4 py-2.5 text-xs font-mono outline-none transition ${isDark ? 'bg-[#070c18] border-slate-700 text-white focus:border-indigo-400' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-indigo-500'}`}
               />
             </div>
           </div>
 
-          {/* Presets */}
           <div className="flex items-center space-x-2 text-[11px]">
-            <span className="text-slate-500 font-mono">Presets:</span>
+            <span className={`font-mono ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Presets:</span>
             <button
               type="button"
               onClick={() => {
                 setScanHost('api.quantumshield.internal');
                 setScanPort('8080');
               }}
-              className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-indigo-300 rounded font-mono text-[10px]"
+              className={`px-2 py-1 rounded font-mono text-[10px] ${isDark ? 'bg-slate-800 text-indigo-300' : 'bg-slate-100 text-indigo-800'}`}
             >
               api:8080
             </button>
@@ -249,7 +251,7 @@ export const ScanView: React.FC<ScanViewProps> = ({
                 setScanHost('proxy.quantumshield.internal');
                 setScanPort('8443');
               }}
-              className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-indigo-300 rounded font-mono text-[10px]"
+              className={`px-2 py-1 rounded font-mono text-[10px] ${isDark ? 'bg-slate-800 text-indigo-300' : 'bg-slate-100 text-indigo-800'}`}
             >
               proxy:8443
             </button>
@@ -258,7 +260,7 @@ export const ScanView: React.FC<ScanViewProps> = ({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 border border-indigo-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2"
+            className="w-full py-2.5 bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-600 dark:text-indigo-300 border border-indigo-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2"
           >
             {isSubmitting ? 'Auditing TLS Certificate...' : 'Inspect TLS Endpoint →'}
           </button>
@@ -266,29 +268,28 @@ export const ScanView: React.FC<ScanViewProps> = ({
       </div>
 
       {/* Selected Scan Findings & CBOM Details Section */}
-      <div className="bg-[#0b1220] border border-slate-800 rounded-2xl p-6 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className={`border rounded-2xl p-6 space-y-6 ${isDark ? 'bg-[#0b1220] border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
+        <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
           <div>
-            <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+            <h3 className={`text-lg font-bold flex items-center space-x-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
               <span>CBOM Audit Results & Findings</span>
               {selectedScan && (
-                <span className="text-xs font-mono px-2.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                <span className="text-xs font-mono px-2.5 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30">
                   ID: {selectedScan.id}
                 </span>
               )}
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
               Select any past scan job or run a new scan to view line-by-line vulnerabilities.
             </p>
           </div>
 
-          {/* Past Scan Selector */}
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-mono text-slate-400">Select Scan:</span>
+            <span className={`text-xs font-mono ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Select Scan:</span>
             <select
               value={selectedScan?.id || ''}
               onChange={(e) => onViewDetails(e.target.value)}
-              className="bg-[#070c18] border border-slate-700 text-xs text-cyan-300 rounded-xl px-3 py-1.5 font-mono outline-none"
+              className={`border text-xs rounded-xl px-3 py-1.5 font-mono outline-none ${isDark ? 'bg-[#070c18] border-slate-700 text-cyan-300' : 'bg-slate-50 border-slate-300 text-slate-800'}`}
             >
               {scans.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -307,15 +308,15 @@ export const ScanView: React.FC<ScanViewProps> = ({
           <div className="space-y-6">
             {/* Severity Filter Tabs */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1.5 bg-[#070c18] p-1 rounded-xl border border-slate-800 text-xs font-mono">
+              <div className={`flex items-center space-x-1.5 p-1 rounded-xl border text-xs font-mono ${isDark ? 'bg-[#070c18] border-slate-800' : 'bg-slate-100 border-slate-200'}`}>
                 {['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map((sev) => (
                   <button
                     key={sev}
                     onClick={() => setActiveSeverityFilter(sev)}
                     className={`px-3 py-1 rounded-lg transition ${
                       activeSeverityFilter === sev
-                        ? 'bg-slate-800 text-cyan-300 font-bold'
-                        : 'text-slate-400 hover:text-white'
+                        ? isDark ? 'bg-slate-800 text-cyan-300 font-bold' : 'bg-white text-cyan-900 font-bold shadow-sm'
+                        : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
                     {sev}
@@ -323,7 +324,7 @@ export const ScanView: React.FC<ScanViewProps> = ({
                 ))}
               </div>
 
-              <span className="text-xs font-mono text-slate-400">
+              <span className={`text-xs font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 Showing {filteredFindings.length} findings
               </span>
             </div>
@@ -333,35 +334,35 @@ export const ScanView: React.FC<ScanViewProps> = ({
               {filteredFindings.map((finding) => (
                 <div
                   key={finding.id}
-                  className="bg-[#070c18] border border-slate-800 rounded-xl p-4 space-y-2 hover:border-slate-700 transition"
+                  className={`border rounded-xl p-4 space-y-2 transition ${isDark ? 'bg-[#070c18] border-slate-800 hover:border-slate-700' : 'bg-slate-50 border-slate-200 hover:border-slate-300'}`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
                       <span
                         className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded border ${
                           finding.severity === 'CRITICAL'
-                            ? 'bg-red-500/20 text-red-400 border-red-500/40'
+                            ? 'bg-red-500/20 text-red-500 border-red-500/40'
                             : finding.severity === 'HIGH'
-                            ? 'bg-orange-500/20 text-orange-400 border-orange-500/40'
-                            : 'bg-amber-500/20 text-amber-400 border-amber-500/40'
+                            ? 'bg-orange-500/20 text-orange-600 dark:text-orange-400 border-orange-500/40'
+                            : 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/40'
                         }`}
                       >
                         {finding.severity}
                       </span>
-                      <span className="text-xs font-mono text-cyan-400 font-bold">{finding.rule_id}</span>
-                      <span className="text-xs font-mono text-slate-300 font-semibold">{finding.algorithm}</span>
+                      <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400 font-bold">{finding.rule_id}</span>
+                      <span className={`text-xs font-mono font-semibold ${isDark ? 'text-slate-300' : 'text-slate-800'}`}>{finding.algorithm}</span>
                     </div>
 
-                    <span className="text-xs font-mono text-slate-500">
+                    <span className={`text-xs font-mono ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
                       {finding.file_path}:{finding.line_no}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-300">{finding.description}</p>
+                  <p className={`text-xs ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{finding.description}</p>
 
-                  <div className="pt-2 flex items-start space-x-2 text-xs bg-[#0b1220] p-3 rounded-lg border border-slate-800">
-                    <span className="text-cyan-400 font-bold shrink-0 font-mono">Remediation:</span>
-                    <span className="text-slate-300 font-mono text-[11px]">{finding.remediation}</span>
+                  <div className={`pt-2 flex items-start space-x-2 text-xs p-3 rounded-lg border ${isDark ? 'bg-[#0b1220] border-slate-800' : 'bg-white border-slate-200 shadow-sm'}`}>
+                    <span className="text-cyan-600 dark:text-cyan-400 font-bold shrink-0 font-mono">Remediation:</span>
+                    <span className={`font-mono text-[11px] ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{finding.remediation}</span>
                   </div>
                 </div>
               ))}
@@ -374,15 +375,15 @@ export const ScanView: React.FC<ScanViewProps> = ({
             </div>
 
             {/* CBOM Components Table */}
-            <div className="pt-4 border-t border-slate-800 space-y-3">
-              <h4 className="text-sm font-bold text-white flex items-center justify-between">
+            <div className={`pt-4 border-t space-y-3 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+              <h4 className={`text-sm font-bold flex items-center justify-between ${isDark ? 'text-white' : 'text-slate-900'}`}>
                 <span>Extracted CBOM Components Inventory</span>
-                <span className="text-xs font-mono text-slate-400">{components.length} components</span>
+                <span className={`text-xs font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{components.length} components</span>
               </h4>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-[#070c18] text-slate-400 uppercase text-[10px] border-b border-slate-800">
+                  <thead className={`uppercase text-[10px] border-b ${isDark ? 'bg-[#070c18] text-slate-400 border-slate-800' : 'bg-slate-50 text-slate-600 border-slate-200'}`}>
                     <tr>
                       <th className="py-2.5 px-4">Component</th>
                       <th className="py-2.5 px-4">Standard / Version</th>
@@ -391,23 +392,23 @@ export const ScanView: React.FC<ScanViewProps> = ({
                       <th className="py-2.5 px-4">Quantum Safety</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800 text-slate-300">
+                  <tbody className={`divide-y ${isDark ? 'divide-slate-800 text-slate-300' : 'divide-slate-200 text-slate-700'}`}>
                     {components.map((comp, idx) => (
-                      <tr key={idx} className="hover:bg-slate-800/30">
-                        <td className="py-2.5 px-4 font-bold text-white">{comp.name}</td>
-                        <td className="py-2.5 px-4 text-slate-400">{comp.version}</td>
+                      <tr key={idx} className={isDark ? 'hover:bg-slate-800/30' : 'hover:bg-slate-50'}>
+                        <td className={`py-2.5 px-4 font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{comp.name}</td>
+                        <td className={`py-2.5 px-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{comp.version}</td>
                         <td className="py-2.5 px-4">
-                          <span className="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700">
+                          <span className={`px-2 py-0.5 rounded text-[10px] border ${isDark ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-slate-100 text-slate-700 border-slate-300'}`}>
                             {comp.crypto_asset_type}
                           </span>
                         </td>
-                        <td className="py-2.5 px-4 text-cyan-300">{comp.algorithm}</td>
+                        <td className="py-2.5 px-4 text-cyan-600 dark:text-cyan-300 font-bold">{comp.algorithm}</td>
                         <td className="py-2.5 px-4">
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                               comp.quantum_safe
-                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                                : 'bg-red-500/10 text-red-400 border border-red-500/30'
+                                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                                : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30'
                             }`}
                           >
                             {comp.quantum_safe ? 'QUANTUM SAFE' : 'VULNERABLE'}
