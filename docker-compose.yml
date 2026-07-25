@@ -58,9 +58,20 @@ services:
       - "8443:8443"
     environment:
       - API_GATEWAY_URL=http://api:8080
-      - PROXY_UPSTREAM=http://host.docker.internal:3000
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - PROXY_UPSTREAM=http://web:3000
+    depends_on:
+      - api
+      - web
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    container_name: quantumshield-web
+    ports:
+      - "3001:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE=http://localhost:8080/api
     depends_on:
       - api
 
