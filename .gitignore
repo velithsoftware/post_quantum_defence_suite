@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build artifacts
+dist/
+build/
+bin/
+*.exe
+*.o
+*.a
+*.so
+*.dylib
+.next/
+out/
+
+# OS and IDE files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs and environment
+*.log
+.env.local
+.env.*.local
